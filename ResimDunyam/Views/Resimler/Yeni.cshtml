@@ -1,0 +1,27 @@
+﻿@model YeniResimViewModel
+@{ 
+    ViewData["Title"] = "Yeni Resim";
+}
+<form asp-controller="Resimler" asp-action="Yeni" method="post" enctype="multipart/form-data">
+    <div class="custom-file">
+        <input asp-for="Resim" type="file" class="custom-file-input" />
+        <label asp-for="Resim" class="custom-file-label">Dosya seçiniz</label>
+    </div>
+    <span asp-validation-for="Resim"></span>
+    <button class="btn btn-primary mt-3">Dosyayı Yükle</button>
+</form>
+
+@section scripts {
+<script>
+    // https://stackoverflow.com/questions/43250263/bootstrap-4-file-input
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        var nextSibling = e.target.nextElementSibling;
+        try {
+            var fileName = this.files[0].name;
+            nextSibling.innerText = fileName;
+        } catch (e) {
+            nextSibling.innerText = "Dosya seçiniz";
+        }
+    });
+</script>
+}

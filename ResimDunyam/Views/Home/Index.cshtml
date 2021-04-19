@@ -1,0 +1,52 @@
+﻿@model List<Resim>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="text-center">
+        <h1 class="display-4">Hoşgeldiniz</h1>
+        <p>Resim yüklemek ya da yüklediniz resimleri görüntülemek ve düzenlemek için lütfen <a asp-area="Identity" asp-page="/Account/Login">giriş</a> yapınız.</p>
+    </div>
+}
+else
+{
+    <div>
+        <h1>Resimlerim</h1>
+
+        <a asp-controller="Resimler" asp-action="Yeni" class="btn btn-success mb-3">Resim Ekle</a>
+
+        <div class="row">
+            @foreach (Resim resim in Model)
+            {
+                <div class="col-md-3 mb-4">
+                    <div class="position-relative">
+                        <img src="~/uploads/@resim.ResimYolu" class="img-thumbnail" alt="resim" />
+                        <a href="#" class="btn btn-sm btn-outline-light btn-delete-image" data-sil-id="@resim.Id"><i class="fas fa-trash"></i></a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        $("[data-sil-id]").click(function (event) {
+            event.preventDefault();
+            if (!confirm("Resmi silmek istediğinize emin misiniz?")) return;
+            var a = this;
+            var id = $(a).data("sil-id");
+
+            $.ajax({
+                type: "post",
+                url: "@Url.Action("Sil", "Resimler")",
+                data: { id: id },
+                success: function () {
+                    $(a).parent().remove();
+                }
+            });
+        });
+    </script>
+}
